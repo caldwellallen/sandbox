@@ -54,8 +54,8 @@ public class BasePage {
             File targetFile =
                 new File(
                     System.getProperty("user.dir")
-                        + "/target/"
-                        + CommonsTestBase.getStartTestTime()
+                        + "\\target\\"
+                        + CommonsTestBase.getStartTestTime().toString().replace(":", "-")
                         + ".png");
             try {
                 FileUtils.copyFile(scrFile, targetFile);
@@ -249,10 +249,10 @@ public class BasePage {
     }
 
     public boolean waitForNotPageSourceText(String text) {
-        return waitForNotPageSourceText(text, 10);
+        return waitForNotPageSourceText(10, text);
     }
 
-    public boolean waitForNotPageSourceText(String text, int maxTries) {
+    public boolean waitForNotPageSourceText(int maxTries, String text) {
         int counter = 1;
         String pageText = driver.getPageSource();
         while (pageText.contains(text) && counter <= maxTries) {
@@ -270,10 +270,10 @@ public class BasePage {
     }
 
     public boolean waitForNotBodyText(String text) {
-        return waitForNotBodyText(text, 10);
+        return waitForNotBodyText(10, text);
     }
 
-    public boolean waitForNotBodyText(String text, int maxTries) {
+    public boolean waitForNotBodyText(int maxTries, String text) {
         int counter = 1;
         String bodyText = this.getBodyText();
         while (bodyText.contains(text) && counter <= maxTries) {

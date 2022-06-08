@@ -1,6 +1,7 @@
 package com.allenc.selenium;
 
 import static com.allenc.selenium.BasePage.setCookies;
+import static com.allenc.selenium.BasePage.takeScreenShot;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -31,10 +32,7 @@ class SeleniumTest extends TestBase {
 
     @Test
     void canEnterDataAndSubmitForm() {
-        googleSearchPage.enterData(googleSearchPage.searchField, "doxo");
-        googleSearchPage.submitForm(googleSearchPage.searchButton);
-        GoogleSearchResultsPage searchResultsPage = new GoogleSearchResultsPage(getDriver());
-        searchResultsPage.waitForTitle("doxo - Google Search");
+        GoogleSearchResultsPage searchResultsPage = googleSearchPage.searchFor("doxo");
         assertThat(searchResultsPage.getBodyText()).contains("What bills can I pay with doxo?");
     }
 
@@ -65,24 +63,29 @@ class SeleniumTest extends TestBase {
 
     @Test
     void canWaitForPageSourceText() {
-        assertThat(googleSearchPage.waitForPageSourceText("Welcome")).isTrue();
+        assertThat(googleSearchPage.waitForPageSourceText("About")).isTrue();
         assertThat(googleSearchPage.waitForNotPageSourceText("XXXXXXXXXXXX")).isTrue();
-        assertThat(googleSearchPage.waitForPageSourceText("XXXXXXXXXXXX")).isFalse();
-        assertThat(googleSearchPage.waitForNotPageSourceText("Welcome")).isFalse();
+        assertThat(googleSearchPage.waitForPageSourceText(2, "XXXXXXXXXXXX")).isFalse();
+        assertThat(googleSearchPage.waitForNotPageSourceText(2, "Store")).isFalse();
     }
 
     @Test
     void canWaitForBodyText() {
-        assertThat(googleSearchPage.waitForBodyText("Welcome")).isTrue();
+        assertThat(googleSearchPage.waitForBodyText("Store")).isTrue();
         assertThat(googleSearchPage.waitForNotBodyText("XXXXXXXXXXXX")).isTrue();
-        assertThat(googleSearchPage.waitForBodyText("XXXXXXXXXXXX")).isFalse();
-        assertThat(googleSearchPage.waitForNotBodyText("Welcome")).isFalse();
+        assertThat(googleSearchPage.waitForBodyText(2, "XXXXXXXXXXXX")).isFalse();
+        assertThat(googleSearchPage.waitForNotBodyText(2, "About")).isFalse();
     }
 
     @Test
     void canSetAndGetCookies() {
         setCookies(Sets.newHashSet(new Cookie("test", "testThis")));
-        assertThat(googleSearchPage.getCookies()).isNotNull();
+        assertThat(googleSearchPage.getCookies()).contains(new Cookie("test", "testThis"));
+    }
+    @Test
+    void canTakeScreenshot() {
+        googleSearchPage.enterData(googleSearchPage.searchField, "TESTING TESTING 123");
+        takeScreenShot();
     }
 
     @Test
