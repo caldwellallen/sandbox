@@ -13,4 +13,12 @@ public class GoogleSearchPage extends BasePage {
         super(driver);
         setScreenSize(1500, 768);
     }
+
+    public GoogleSearchResultsPage searchFor(String searchQuery) {
+        enterData(searchField, searchQuery);
+        submitForm(searchButton);
+        waitForTitle(searchQuery + " - Google Search");
+        return new GoogleSearchResultsPage(getDriver());
+    }
+
 }

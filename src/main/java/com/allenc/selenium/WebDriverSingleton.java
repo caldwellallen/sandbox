@@ -104,9 +104,11 @@ public class WebDriverSingleton {
         return new FirefoxDriver(options);
     }
 
-    private static ChromeDriver createChromeDriver() {
+    private static ChromeDriver createChromeDriver(boolean isHeadless) {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        if (isHeadless) {
+            options.addArguments("--headless");
+        }
         options.addArguments("--no-sandbox");
         return new ChromeDriver();
     }
@@ -154,7 +156,7 @@ public class WebDriverSingleton {
             return createFirefoxDriver(isHeadless);
             case CHROME:
             case HEADLESS_CHROME:
-                return createChromeDriver();
+                return createChromeDriver(isHeadless);
             case EDGE:
                 return createEdgeDriver();
             case OPERA:
